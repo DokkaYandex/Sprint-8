@@ -105,8 +105,8 @@ func main() {
 	}
 	defer db.Close()
 
-	store := NewParcelStore(db)
-	service := NewParcelService(store)
+	ParcelStore := NewParcelStore(db)
+	service := NewParcelService(ParcelStore)
 
 	// регистрация посылки
 	client := 1
