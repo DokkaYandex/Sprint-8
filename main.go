@@ -108,7 +108,6 @@ func main() {
 	ParcelStore := NewParcelStore(db)
 	service := NewParcelService(ParcelStore)
 
-	// регистрация посылки
 	client := 1
 	address := "Псков, д. Пушкина, ул. Колотушкина, д. 5"
 	p, err := service.Register(client, address)

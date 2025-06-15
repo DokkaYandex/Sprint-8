@@ -96,5 +96,3 @@ func (s ParcelStore) Delete(number int) error {
 	}
 	return nil
 }
-
-//
