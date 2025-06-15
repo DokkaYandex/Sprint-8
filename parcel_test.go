@@ -41,17 +41,14 @@ func TestAddGetDelete(t *testing.T) {
 	// добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
 	id, err := store.Add(parcel)
 	require.NoError(t, err)
-	require.True(t, id > 0)
-	parcel.Number = 1
+	require.NotEmpty(t, id)
+	parcel.Number = id
 	// get
 	// получите только что добавленную посылку, убедитесь в отсутствии ошибки
 	// проверьте, что значения всех полей в полученном объекте совпадают со значениями полей в переменной parcel
 	got, err := store.Get(id)
 	require.NoError(t, err)
-	require.Equal(t, parcel.Address, got.Address)
-	require.Equal(t, parcel.Status, got.Status)
-	require.Equal(t, parcel.Client, got.Client)
-	require.Equal(t, parcel.CreatedAt, got.CreatedAt)
+	require.Equal(t, parcel, got)
 	// delete
 	// удалите добавленную посылку, убедитесь в отсутствии ошибки
 	// проверьте, что посылку больше нельзя получить из БД
@@ -74,7 +71,7 @@ func TestSetAddress(t *testing.T) {
 	// добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
 	id, err := store.Add(parcel)
 	require.NoError(t, err)
-	require.True(t, id > 0)
+	require.NotEmpty(t, id)
 	parcel.Number = 1
 	// set address
 	// обновите адрес, убедитесь в отсутствии ошибки
@@ -101,7 +98,7 @@ func TestSetStatus(t *testing.T) {
 	// добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
 	id, err := store.Add(parcel)
 	require.NoError(t, err)
-	require.True(t, id > 0)
+	require.NotEmpty(t, id)
 	parcel.Number = 1
 	// set status
 	// обновите статус, убедитесь в отсутствии ошибки
@@ -139,7 +136,7 @@ func TestGetByClient(t *testing.T) {
 	for i := 0; i < len(parcels); i++ {
 		id, err := store.Add(parcels[i])
 		require.NoError(t, err)
-		require.True(t, id > 0) // добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
+		require.NotEmpty(t, id) // добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
 
 		// обновляем идентификатор добавленной у посылки
 		parcels[i].Number = id
@@ -160,10 +157,7 @@ func TestGetByClient(t *testing.T) {
 	for _, parcel := range storedParcels {
 		expected, ok := parcelMap[parcel.Number]
 		require.True(t, ok, "unexpected parcel with id %d", parcel.Number)
-		require.Equal(t, expected.Client, parcel.Client)
-		require.Equal(t, expected.Status, parcel.Status)
-		require.Equal(t, expected.Address, parcel.Address)
-		require.Equal(t, expected.CreatedAt, parcel.CreatedAt)
+		require.Equal(t, expected, parcel)
 
 		// в parcelMap лежат добавленные посылки, ключ - идентификатор посылки, значение - сама посылка
 		// убедитесь, что все посылки из storedParcels есть в parcelMap
